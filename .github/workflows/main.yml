@@ -12,8 +12,6 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 18
-      - run: npm ci
-      - run: npm run build
       - name: Make envfile
         uses: SpicyPizza/create-envfile@v1
         with:
@@ -25,7 +23,9 @@ jobs:
           envkey_MONGODB_URI: ${{ secrets.MONGODB_URI }}
           file_name: .env.local
           directory: ./
-      - name: copy file via ssh password
+      - run: npm ci
+      - run: npm run build
+      - name: copy file via scp
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.HOST }}

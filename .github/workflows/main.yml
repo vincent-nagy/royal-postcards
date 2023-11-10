@@ -25,11 +25,30 @@ jobs:
           directory: ./
       - run: npm ci
       - run: npm run build
+      - name: SSH shutdown andcleanup
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ~/app
+            pm2 kill
+            rm -rf *
+
       - name: copy file via scp
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          source: ".next,package.json"
+          source: ".next,.env.local,node_modules,package.json"
           target: "~/app"
+        
+      - name: SSH startup
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: pm2 start "npm run start" --name "[RoyalPostcards]"

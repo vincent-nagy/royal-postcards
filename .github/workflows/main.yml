@@ -33,4 +33,3 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           source: "package.json"
           target: "~/app"
-          

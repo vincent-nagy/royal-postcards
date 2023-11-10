@@ -1,0 +1,171 @@
+:root {
+  --color1: #b30000;
+  --color2: #7d0000;
+  --color3: #ffbfbf;
+  --color4: #ff8080;
+  --color5: #ff8080;
+  --background-color: #e8e8e8;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0px;
+  background-color: var(--background-color);
+}
+
+.navbar {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  color: whitesmoke;
+  background-color: var(--color2);
+}
+
+.navbar nav {
+  background-color: #b30000;
+  overflow: hidden;
+}
+
+.navbar h1 {
+  margin: 15px;
+  align-items: center;
+}
+
+nav a {
+  text-decoration: none;
+  color: var(--color5);
+  font-size: 1.5rem;
+  list-style: none;
+  display: inline-block;
+  text-decoration: none;
+  padding-right: 5px;
+  padding-left: 15px;
+  padding: 5px 5px 5px 5px;
+  margin: 0px;
+}
+
+nav a.active {
+  background-color: var(--color2);
+}
+
+.items {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.item {
+  overflow: hidden;
+  margin: 15px;
+  background-color: white;
+  border-radius: 6px;
+  padding: .4em;
+  width: 20%;
+}
+
+.item img {
+  width: 100%;
+  height: auto;
+  border-radius: 6px 6px 0 0;
+}
+
+.item img:hover {
+  transform: scale(0.97);
+}
+
+.item p {
+  text-align: center;
+}
+
+#react-modal-image-img {
+  max-width: 90vw;
+  max-height: 90vh;
+  width: fit-content;
+  height: fit-content;
+}
+
+.bottom-button {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
+
+#zoom-in {
+  position: fixed;
+  bottom: 10px;
+  right: 30px;
+}
+
+#zoom-out {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+}
+
+/* subnavbar */
+.sub-navbar {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  box-sizing: border-box;
+  color: var(--color3);
+  background-color: white;
+  overflow: hidden;
+}
+
+.sub-navbar-item {
+  text-decoration: none;
+  color: var(--color5);
+  font-size: 1rem;
+  list-style: none;
+  display: inline-block;
+  text-decoration: none;
+  padding-right: 5px;
+  padding-left: 15px;
+  padding: 5px 5px 5px 5px;
+  margin: 0px;
+  cursor: pointer;
+}
+
+.country h1 {
+  margin: 10px 0px 0px 50px;
+  color: var(--color1)
+}
+
+.country h2 {
+  margin: 10px 0px 0px 50px;
+  color: var(--color2)
+}
+
+.add-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-form input {
+  margin: 10px;
+
+}
+
+.add-form-select {
+  margin: 10px;
+}
+
+.add-form-select img {
+  height: 20vh;
+}
+
+.subcategory {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-form span {
+  color: red;
+}

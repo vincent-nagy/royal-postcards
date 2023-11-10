@@ -1,0 +1,34 @@
+{
+  "name": "royals",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "db": "json-server --watch db.json --port 8000"
+  },
+  "dependencies": {
+    "image-size": "^1.0.2",
+    "mongodb": "^6.2.0",
+    "next": "14.0.0",
+    "next-auth": "^5.0.0-beta.3",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-hook-form": "^7.47.0",
+    "react-icons": "^4.11.0",
+    "react-modal-image": "^2.6.0",
+    "react-select": "^5.7.7",
+    "yet-another-react-lightbox": "^3.14.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/react-modal-image": "^2.6.2",
+    "eslint": "^8",
+    "eslint-config-next": "14.0.0",
+    "typescript": "^5"
+  }
+}

@@ -3,7 +3,7 @@ import CategoryHolder from "@/app/components/Category/CategoryHolder";
 import clientPromise from "@/mongodb";
 
 
-export async function fetchItems(countryName: string): Promise<Item[]> {
+async function fetchItems(countryName: string): Promise<Item[]> {
     const client = await clientPromise;
     const db = client.db("Royal");
 

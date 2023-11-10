@@ -14,3 +14,22 @@ jobs:
           node-version: 18
       - run: npm ci
       - run: npm run build
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v1
+        with:
+          envkey_AUTH0_CLIENT_ID: ${{ secrets.AUTH0_CLIENT_ID }}
+          envkey_AUTH0_CLIENT_SECRET: ${{ secrets.AUTH0_CLIENT_SECRET }}
+          envkey_AUTH0_ISSUER: ${{ secrets.AUTH0_ISSUER }}
+          envkey_NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          envkey_NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+          envkey_MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          file_name: .env.local
+          directory: ./
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: ".next,package.json"
+          target: "~/app"

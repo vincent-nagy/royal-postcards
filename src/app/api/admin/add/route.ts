@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../../../../auth";
-import path from "path";
+import os from "os";
 import { writeFileSync, existsSync, mkdirSync } from "fs";
 import clientPromise from "@/mongodb";
 import sizeOf from "image-size";
-
-const rootDir = path.parse(process.cwd()).root;
 
 export async function POST(request: NextRequest) {
     const session = await auth();
@@ -35,7 +33,7 @@ export async function POST(request: NextRequest) {
     const items: Item[] = files.filter(file => !errors.find(error => {
         return error.includes(file.name)
     })).map((file) => {
-        const size = sizeOf(`${rootDir}home/vinagy/images/${folder}/${file.name}`);
+        const size = sizeOf(`${os.homedir()}/images/${folder}/${file.name}`);
         return ({
             source: `${folder}/${file.name}`,
             filename: file.name,
@@ -75,15 +73,15 @@ export async function POST(request: NextRequest) {
 }
 
 function createFolderIfNotExists(folder: string) {
-    if (!existsSync(`${rootDir}home/vinagy/images/${folder}`)) {
-        mkdirSync(`${rootDir}home/vinagy/images/${folder}`, { recursive: true });
+    if (!existsSync(`${os.homedir()}/images/${folder}`)) {
+        mkdirSync(`${os.homedir()}/images/${folder}`, { recursive: true });
     }
 }
 
 function writeFiles(files: File[], folder: string, errors: string[]): Promise<void[]> {
     return Promise.all(files.map(async file => {
         try {
-            writeFileSync(`${rootDir}home/vinagy/images/${folder}/${file.name}`, Buffer.from(await file.arrayBuffer()), { flag: 'wx' });
+            writeFileSync(`${os.homedir()}/images/${folder}/${file.name}`, Buffer.from(await file.arrayBuffer()), { flag: 'wx' });
         } catch (err) {
             if (err instanceof Error) {
                 errors.push(err?.message as string);

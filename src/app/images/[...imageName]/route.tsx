@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import fs from "fs";
-import path from "path";
+import os from 'os';
 import { auth } from "../../../../auth";
 
 export async function GET(request: NextRequest, { params }: { params: { imageName: string[] } }) {
-    const rootDir = path.parse(process.cwd()).root;
     const imagePath = params.imageName.join("/");
 
-    const image = fs.readFileSync(`${rootDir}/home/vinagy/images/${imagePath}`);
+    const image = fs.readFileSync(`${os.homedir()}/images/${imagePath}`);
 
     return new NextResponse(image, {
         status: 200,
@@ -24,7 +23,6 @@ export async function PUT(request: NextRequest, { params }: { params: { imageNam
         return NextResponse.json(null, { status: 401 })
     }
 
-    const rootDir = path.parse(process.cwd()).root;
     const imageName = params.imageName[0];
 
     const data = await request.formData();
@@ -34,7 +32,7 @@ export async function PUT(request: NextRequest, { params }: { params: { imageNam
         return NextResponse.json(null, { status: 400 })
     }
 
-    fs.writeFile(`${rootDir}/home/vinagy/images/${imageName}`, Buffer.from(await file.arrayBuffer()), { flag: 'wx' }, (err) => {
+    fs.writeFile(`${os.homedir()}/images/${imageName}`, Buffer.from(await file.arrayBuffer()), { flag: 'wx' }, (err) => {
         return NextResponse.json({ message: err?.message }, { status: 400 })
     })
 

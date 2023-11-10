@@ -2,7 +2,7 @@ name: main
 
 on:
   push:
-    branches: [ deploy ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -51,4 +51,6 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          script: pm2 start "npm run start" --name "[RoyalPostcards]"
+          script: |
+            cd ~/app
+            pm2 start "npm run start" --name "[RoyalPostcards]"

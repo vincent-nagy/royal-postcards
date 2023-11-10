@@ -28,7 +28,7 @@ jobs:
       - name: copy file via scp
         uses: appleboy/scp-action@v0.1.4
         with:
-          host: ${{ secrets.HOST }}
+          host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           source: ".next,package.json"

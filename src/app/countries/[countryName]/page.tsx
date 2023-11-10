@@ -2,6 +2,7 @@ import ZoomButtons from "@/app/components/ZoomButtons";
 import CategoryHolder from "@/app/components/Category/CategoryHolder";
 import clientPromise from "@/mongodb";
 
+export const dynamic = "force-dynamic";
 
 async function fetchItems(countryName: string): Promise<Item[]> {
     const client = await clientPromise;

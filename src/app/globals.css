@@ -25,6 +25,8 @@ body {
 .navbar nav {
   background-color: #b30000;
   overflow: hidden;
+  display: flex;
+  flex-direction: row;
 }
 
 .navbar h1 {
@@ -37,7 +39,6 @@ nav a {
   color: var(--color5);
   font-size: 1.5rem;
   list-style: none;
-  display: inline-block;
   text-decoration: none;
   padding-right: 5px;
   padding-left: 15px;
@@ -168,4 +169,50 @@ nav a.active {
 
 .add-form span {
   color: red;
+}
+
+.sort-item {
+  cursor: grab;
+  user-select: none;
+}
+
+.sort-item img {
+  cursor: grab;
+}
+
+
+.admin-dropdown {
+  margin-left: auto;
+  padding: 5px 5px 5px 5px;
+}
+
+.admin-dropdown span {
+  color: var(--color5);
+  font-size: 1.5rem;
+}
+
+.admin-dropdown-content {
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  background-color: var(--color1);
+  min-width: 100px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  padding: 4px 8px;
+  right: 0;
+  margin-top: 5px;
+}
+
+.admin-dropdown-content a {
+  display: flex;
+}
+
+.admin-dropdown:hover .admin-dropdown-content {
+  opacity: 1;
+  visibility: visible;
+}
+
+.admin-dropdown:hover {
+  background-color: var(--color2);
 }

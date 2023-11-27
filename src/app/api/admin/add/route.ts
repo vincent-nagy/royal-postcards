@@ -34,13 +34,15 @@ export async function POST(request: NextRequest) {
         return error.includes(file.name)
     })).map((file) => {
         const size = sizeOf(`${os.homedir()}/images/${folder}/${file.name}`);
+        console.log("Size :", size.height, size.width);
+        console.log("Layout :", size.height && size.width ? (size.height < size.width ? "horizontal" : "vertical") : "horizontal");
         return ({
             source: `${folder}/${file.name}`,
             filename: file.name,
             country: country,
             category: category,
             subcategory: subcategory,
-            layout: size.height && size.width ? (size.height > size.width ? "horizontal" : "vertical") : "horizontal",
+            layout: size.height && size.width ? (size.height < size.width ? "horizontal" : "vertical") : "horizontal",
         } as Item)
     });
 

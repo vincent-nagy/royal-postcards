@@ -1,7 +1,7 @@
 "use client"
 
-import ModalImage from "react-modal-image";
 import useBaseWidthContext from "../../context/BaseWidth";
+import ItemImage from "../ItemImage";
 
 interface SubcategoryProps {
     items: Item[],
@@ -15,18 +15,15 @@ const Subcategory = ({ items, title }: SubcategoryProps) => {
         <div className="subcategory">
             <h2>{title}</h2>
             <div className="items">
-                {items?.map(item => (
-                    <div className="item" key={item.id} style={{ width: item.layout === "horizontal" ? baseWidth * 2 + "%" : baseWidth + "%" }}>
-                        <ModalImage
-                            large={"/images/" + item.source}
-                            small={"/images/" + item.source}
-                            alt={item.description}
-                            hideDownload={true}
-                        />
-                        <p>{item.description}</p>
-                    </div>
-
-                ))}
+                {items?.sort((a, b) => {
+                    if (a.order === undefined || b.order === undefined) {
+                        return 0;
+                    }
+                    return a.order > b.order ? 1 : -1;
+                })
+                    .map(item => (
+                        <ItemImage key={item.id} item={item} baseWidth={baseWidth} />
+                    ))}
             </div>
         </div>
     </>);

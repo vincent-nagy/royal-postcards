@@ -1,4 +1,3 @@
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
 import { auth } from "../../../../auth";
@@ -24,7 +23,15 @@ const Navbar = async () => {
                 ))}
                 <Link href="/about">About</Link>
                 <Link href="/contact">Contact</Link>
-                {session && <Link href="/admin/images" style={{ float: "right" }}>Add images</Link>}
+                {session &&
+                    <div className="admin-dropdown">
+                        <span>Admin</span>
+                        <div className="admin-dropdown-content">
+                            <Link href="/admin/images">Add images</Link>
+                            <Link href="/admin/manage">Manage</Link>
+                        </div>
+                    </div>
+                }
                 {!session && <Link href="/api/auth/signin" style={{ float: "right" }}>Sign in</Link>}
             </nav>
         </header>

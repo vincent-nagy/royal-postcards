@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect, useState } from "react";
 import Subcategory from "./Subcategory";
 
 interface CategoryProps {

@@ -6,5 +6,6 @@ type Item = {
     subcategory: string,
     source: string,
     description: string,
-    layout: "vertical" | "horizontal"
+    layout: "vertical" | "horizontal",
+    order?: number
 }

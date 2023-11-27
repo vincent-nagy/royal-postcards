@@ -10,16 +10,6 @@ interface FormInputs {
     subcategory: string
 }
 
-async function postItems(formData: FormData) {
-    const response = await fetch('/api/admin/add', {
-        method: "POST",
-        body: formData,
-    });
-
-    const { result, errors } = await response.json();
-    return { result, errors };
-}
-
 export default function Upload() {
     const [apiErrors, setApiErrors] = useState<string[]>([]);
     const [apiResult, setApiResult] = useState<Item[]>([]);

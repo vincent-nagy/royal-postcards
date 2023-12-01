@@ -22,7 +22,7 @@ const Subcategory = ({ items, title }: SubcategoryProps) => {
                     return a.order > b.order ? 1 : -1;
                 })
                     .map(item => (
-                        <ItemImage key={item.id} item={item} baseWidth={baseWidth} />
+                        <ItemImage key={item._id} item={item} baseWidth={baseWidth} />
                     ))}
             </div>
         </div>

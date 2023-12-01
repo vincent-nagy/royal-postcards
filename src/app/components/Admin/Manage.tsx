@@ -4,19 +4,35 @@ import { useEffect, useState } from "react";
 import SortableList, { SortableItem } from "react-easy-sort";
 import { arrayMoveImmutable } from "array-move";
 import ItemsApiService from "@/app/services/ItemsApiService";
+import { FiTrash } from "react-icons/fi";
+import UpdateItemModal from "./Modals/UpdateItemModal";
+import { useDeleteItemMutation, useFetchItemsQuery } from "@/app/services/client/ItemsService";
 
-type SortProps = {
-    items: Item[]
-}
 
-export default function Manage({ items }: SortProps) {
-    const countries = [...new Set(items?.map(item => item.country))]
+export default function Manage() {
+    const { data: items } = useFetchItemsQuery();
+    const [deleteItemMutation] = useDeleteItemMutation();
 
+    // const countries = [...new Set(items?.map(item => item.country))]
+    const [countries, setCountries] = useState<string[]>([]);
     const [categories, setCategories] = useState<string[]>([]);
-    const [selectedCountry, setSelectedCountry] = useState<string>(countries[0]);
+    const [selectedCountry, setSelectedCountry] = useState<string>("");
     const [selectedCategory, setSelectedCategory] = useState<string>("");
     const [filteredItems, setFilteredItems] = useState<Item[]>([]);
-    const [itemsToBeDeleted, setItemsToBeDeleted] = useState<Set<string>>(new Set());
+    const [modalItem, setModalItem] = useState<Item>();
+
+    useEffect(() => {
+        if (items && items.length > 0) {
+            const countries = [...new Set(items.map(item => item.country))];
+            setCountries(countries);
+            if (selectedCountry === "" || selectedCountry === undefined) {
+                setSelectedCountry(countries[0]);
+            }
+            if (selectedCategory === "" || selectedCategory === undefined) {
+                setSelectedCategory(categories[0]);
+            }
+        }
+    }, [items]);
 
     useEffect(() => {
         setCategories([...new Set(items?.filter(item => item.country === selectedCountry).map(item => item.category))]);
@@ -32,7 +48,7 @@ export default function Manage({ items }: SortProps) {
                 return 0;
             }
             return a.order > b.order ? 1 : -1;
-        }));
+        }) ?? []);
     }, [selectedCategory])
 
     const onSortEnd = (oldIndex: number, newIndex: number) => {
@@ -41,23 +57,50 @@ export default function Manage({ items }: SortProps) {
 
     const updateSort = (items: Item[]) => {
         var order = 0;
-        ItemsApiService.updateSort(items.map(item => {
-            item.order = order++;
-            return item;
+
+        console.log(items.map(item => {
+            return { ...item, order: order++ };
         }));
+
+        ItemsApiService.updateSort(items.map(item => {
+            return { ...item, order: order++ };
+        })).then(updatedSuccessfully => {
+            if (!updatedSuccessfully) {
+                alert("Failed to update sort");
+            } else {
+                alert("Successfully updated sort");
+            }
+        })
     }
 
-    const deleteItems = () => {
-        confirm(`Are you sure you want to delete ${itemsToBeDeleted.size} items?`)
-        //&& ItemsApiService.deleteItems(filteredItems.map(item => item.id));
+    const deleteItem = (id: string) => {
+        if (confirm(`Are you sure you want to delete ${id}?`)) {
+            // ItemsApiService.deleteItem(id).then(deletedSuccessfully => {
+            //     if (!deletedSuccessfully) {
+            //         alert("Failed to delete item");
+            //     } else {
+            //         setFilteredItems(filteredItems.filter(item => item._id !== id));
+            //     }
+            // });
+            deleteItemMutation(id)
+                .unwrap()
+                .then(() => {
+                    setFilteredItems(filteredItems.filter(item => item._id !== id));
+                }).catch(() => {
+                    alert("Failed to delete item");
+                })
+        }
+    }
 
-
-        console.log(itemsToBeDeleted);
+    const openUpdateItemModal = (item: Item) => {
+        console.log("Setting modalItem", item);
+        setModalItem(item);
     }
 
     return (
         <div>
             <h1>Manage</h1>
+            <UpdateItemModal item={modalItem} closeModal={() => setModalItem(undefined)} />
             <select
                 value={selectedCountry}
                 onChange={(e) => {
@@ -79,7 +122,6 @@ export default function Manage({ items }: SortProps) {
                 ))}
             </select>
             <button onClick={() => updateSort(filteredItems)}>Save sorting</button>
-            <button onClick={deleteItems} style={{ backgroundColor: "red", marginLeft: "100px" }}>Delete selected items</button>
             <div className="items">
                 <SortableList
                     onSortEnd={onSortEnd}
@@ -92,18 +134,17 @@ export default function Manage({ items }: SortProps) {
                     }}
                 >
                     {filteredItems?.map(item => (
-                        <SortableItem key={item.id}>
-                            <div className="item sort-item" key={item.id} style={{ width: item.layout === "horizontal" ? 10 * 2 + "%" : 10 + "%", position: "relative" }} itemID={item.id}>
+                        <SortableItem key={item._id}>
+                            <div className="item sort-item"
+                                key={item._id}
+                                style={{ width: item.layout === "horizontal" ? 10 * 2 + "%" : 10 + "%", position: "relative" }}
+                                itemID={item._id}
+                                onDoubleClick={() => {
+                                    openUpdateItemModal(item);
+                                }}
+                            >
                                 <img src={"/images/" + item.source} alt={item.filename} draggable={false} />
-                                <input type="checkbox" id={item.id} style={{ position: "absolute", top: 7, right: 7, height: "30px", width: "30px" }} value={item.id}
-                                    onChange={(event) => {
-                                        if (event.target.checked) {
-                                            setItemsToBeDeleted(itemsToBeDeleted.add(item.id));
-                                        } else {
-                                            itemsToBeDeleted.delete(item.id);
-                                            setItemsToBeDeleted(itemsToBeDeleted);
-                                        }
-                                    }} />
+                                <button className="button-delete" onClick={() => deleteItem(item._id)}><FiTrash /></button>
                             </div>
                         </SortableItem>
                     ))}

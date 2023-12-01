@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import Navbar from './components/Nav/Navbar'
 import { BaseWidthProvider } from './context/BaseWidth'
+import ReduxProvider from './state/ReduxProvider'
 
 export const metadata: Metadata = {
   title: 'Royal postcards',
@@ -16,10 +17,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="root">
-        <Navbar />
-        <BaseWidthProvider>
-          {children}
-        </BaseWidthProvider>
+        <ReduxProvider>
+          <Navbar />
+          <BaseWidthProvider>
+            {children}
+          </BaseWidthProvider>
+        </ReduxProvider>
       </body>
     </html>
   )

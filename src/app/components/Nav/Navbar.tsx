@@ -9,7 +9,7 @@ const Navbar = async () => {
     const client = await clientPromise;
     const db = client.db("Royal");
 
-    const countries = (await db.collection("Postcards").distinct("country")).map((country: string) => {
+    const countries = (await db.collection<Item>("Postcards").distinct("country")).map((country: string) => {
         return country as string;
     });
 

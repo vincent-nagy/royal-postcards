@@ -180,7 +180,6 @@ nav a.active {
   cursor: grab;
 }
 
-
 .admin-dropdown {
   margin-left: auto;
   padding: 5px 5px 5px 5px;
@@ -189,6 +188,7 @@ nav a.active {
 .admin-dropdown span {
   color: var(--color5);
   font-size: 1.5rem;
+  cursor: pointer;
 }
 
 .admin-dropdown-content {
@@ -199,7 +199,7 @@ nav a.active {
   min-width: 100px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
-  padding: 4px 8px;
+  padding: 4px 16px;
   right: 0;
   margin-top: 5px;
 }
@@ -215,4 +215,20 @@ nav a.active {
 
 .admin-dropdown:hover {
   background-color: var(--color2);
+}
+
+.button-delete {
+  background: white;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  height: 30px;
+  width: 30px;
+  border-bottom-left-radius: 10px;
 }

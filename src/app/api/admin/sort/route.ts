@@ -21,8 +21,8 @@ export async function PUT(request: NextRequest) {
 
 
     const results = await Promise.all(items.map(item => {
-        console.log("Updating item {} with order {}", item.id, item.order);
-        return db.collection("Postcards").updateOne({ _id: new ObjectId(item.id) }, { $set: { order: item.order } });
+        console.log("Updating item {} with order {}", item._id, item.order);
+        return db.collection("Postcards").updateOne({ _id: new ObjectId(item._id) }, { $set: { order: item.order } });
     }));
 
     results.forEach(result => console.log("Result : ", result))

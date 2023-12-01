@@ -1,5 +1,5 @@
 export default abstract class ItemsApiService {
-    public static async updateSort(items: Item[]): Promise<void> {
+    public static async updateSort(items: Item[]): Promise<boolean> {
         try {
             const response = await fetch("/api/admin/sort", {
                 method: "PUT",
@@ -9,10 +9,13 @@ export default abstract class ItemsApiService {
                 body: JSON.stringify(items),
             });
             if (!response.ok) {
-                throw new Error("Failed to update sort");
+                return false;
+            } else {
+                return true;
             }
         } catch (error) {
             console.error(error);
         }
+        return false;
     }
 }

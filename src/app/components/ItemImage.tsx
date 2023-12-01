@@ -10,7 +10,7 @@ type ItemImageProps = {
 const ItemImage = ({ item, baseWidth }: ItemImageProps) => {
     return (
         <>
-            <div className="item" key={item.id} style={{ width: item.layout === "horizontal" ? baseWidth * 2 + "%" : baseWidth + "%" }} itemID={item.id}>
+            <div className="item" key={item._id} style={{ width: item.layout === "horizontal" ? baseWidth * 2 + "%" : baseWidth + "%" }} itemID={item._id}>
                 <ModalImage
                     large={"/images/" + item.source}
                     small={"/images/" + item.source}

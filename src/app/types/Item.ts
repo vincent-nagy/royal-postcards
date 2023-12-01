@@ -1,5 +1,5 @@
 type Item = {
-    id: string,
+    _id: string,
     filename: string,
     country: string,
     category: string,

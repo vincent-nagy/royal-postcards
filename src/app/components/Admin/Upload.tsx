@@ -34,7 +34,7 @@ export default function Upload() {
             }
         }
 
-        const response = await fetch('/api/admin/add', {
+        const response = await fetch('/api/admin/items', {
             method: "POST",
             body: formData,
         }).then(res => res.json());
@@ -86,8 +86,8 @@ export default function Upload() {
                     </tr>
                 </thead>
                 <tbody>
-                    {apiResult?.map(item => <tr key={item.id}>
-                        <td>{item.id}</td>
+                    {apiResult?.map(item => <tr key={item._id}>
+                        <td>{item._id}</td>
                         <td>{item.source}</td>
                         <td>{item.country}</td>
                         <td>{item.category}</td>

@@ -1,9 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../../../../auth";
 import os from "os";
-import { writeFileSync, existsSync, mkdirSync } from "fs";
 import clientPromise from "@/mongodb";
 import sizeOf from "image-size";
+import FsService from "@/app/services/FsService";
+import { WithId } from "mongodb";
+
+
+export async function GET(request: NextRequest) {
+    const client = await clientPromise;
+    const db = client.db("Royal");
+
+    const items: Item[] = (await db.collection<Item>("Postcards").find()
+        .map(mapItem)
+        .toArray());
+
+    return NextResponse.json(items);
+}
 
 export async function POST(request: NextRequest) {
     const session = await auth();
@@ -19,14 +32,14 @@ export async function POST(request: NextRequest) {
 
     const folder = subcategory ? `${country}/${category}/${subcategory}` : `${country}/${category}`;
 
-    createFolderIfNotExists(folder);
+    FsService.createFolderIfNotExists(folder);
 
     const files = [...formData.values()]
         .filter(value => typeof value === "object" && "arrayBuffer" in value)
         .map(value => value as unknown as File);
 
     let errors: string[] = [];
-    await writeFiles(files, folder, errors);
+    await FsService.writeFiles(files, folder, errors);
 
 
 
@@ -52,9 +65,9 @@ export async function POST(request: NextRequest) {
     let savedItems = [];
     await Promise.all(items.map(async (item) => {
         try {
-            const result = await db.collection("Postcards").insertOne(item);
+            const result = await db.collection<Item>("Postcards").insertOne(item);
             if (result.acknowledged) {
-                item.id = result.insertedId.toString();
+                item._id = result.insertedId.toString();
                 return item;
             }
         } catch (err) {
@@ -74,22 +87,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ items: items, errors: errors }, { status: 201 })
 }
 
-function createFolderIfNotExists(folder: string) {
-    if (!existsSync(`${os.homedir()}/images/${folder}`)) {
-        mkdirSync(`${os.homedir()}/images/${folder}`, { recursive: true });
-    }
-}
-
-function writeFiles(files: File[], folder: string, errors: string[]): Promise<void[]> {
-    return Promise.all(files.map(async file => {
-        try {
-            writeFileSync(`${os.homedir()}/images/${folder}/${file.name}`, Buffer.from(await file.arrayBuffer()), { flag: 'wx' });
-        } catch (err) {
-            if (err instanceof Error) {
-                errors.push(err?.message as string);
-            } else {
-                errors.push(err as string);
-            }
-        }
-    }));
+function mapItem(doc: WithId<Item>): Item {
+    return {
+        ...doc,
+        _id: doc._id.toString(),
+    };
 }

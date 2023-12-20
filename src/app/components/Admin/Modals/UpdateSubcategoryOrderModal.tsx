@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useBoundStore } from "@/app/store";
 import SortableList, { SortableItem } from "react-easy-sort";
 import { arrayMoveImmutable } from "array-move";
-import ItemsService from "@/app/services/client/ItemsService";
+import { useGetItemsByCountryCategory, useUpdateItem } from "@/app/services/client/ItemsService";
 
 
 type UpdateSubcategoryOrderModalProps = {
@@ -14,12 +14,12 @@ type UpdateSubcategoryOrderModalProps = {
 }
 
 const UpdateSubcategoryOrderModal = ({ closeModal, isOpen }: UpdateSubcategoryOrderModalProps) => {
-    const useUpdateItem = ItemsService.useUpdateItem();
+    const updateItem = useUpdateItem();
 
     const selectedCountry = useBoundStore(state => state.selectedCountry);
     const selectedCategory = useBoundStore(state => state.selectedCategory);
 
-    const { data } = ItemsService.useGetItemsByCountryCategory(selectedCountry, selectedCategory);
+    const { data } = useGetItemsByCountryCategory(selectedCountry, selectedCategory);
 
     const [subcategories, setSubcategories] = useState<string[]>([]);
 
@@ -60,7 +60,7 @@ const UpdateSubcategoryOrderModal = ({ closeModal, isOpen }: UpdateSubcategoryOr
 
         console.log("Filtered Items ", filteredItems);
         filteredItems.forEach(item => {
-            useUpdateItem.mutate(item);
+            updateItem.mutate(item);
         })
     }
 

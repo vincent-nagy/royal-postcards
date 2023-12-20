@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import Modal from "./Modal";
-import ItemsService from "@/app/services/client/ItemsService";
+import { useUpdateItem } from "@/app/services/client/ItemsService";
 
 interface FormInputs {
     country: string
@@ -18,7 +18,7 @@ type UpdateItemModalProps = {
 }
 
 const UpdateItemModal = ({ item, closeModal, isOpen }: UpdateItemModalProps) => {
-    const useUpdateItem = ItemsService.useUpdateItem();
+    const updateItem = useUpdateItem();
 
     const { register, reset, handleSubmit, formState: { errors } } = useForm<FormInputs>();
     useEffect(() => {
@@ -28,7 +28,7 @@ const UpdateItemModal = ({ item, closeModal, isOpen }: UpdateItemModalProps) => 
     const onSubmit = async (fieldValues: FieldValues) => {
         const modifiedItem = { ...item, ...fieldValues } as Item;
 
-        useUpdateItem.mutate(modifiedItem, {
+        updateItem.mutate(modifiedItem, {
             onSuccess: () => {
                 alert("Successfully updated item");
                 closeModal();
@@ -59,7 +59,7 @@ const UpdateItemModal = ({ item, closeModal, isOpen }: UpdateItemModalProps) => 
                             placeholder="Subcategory"
                             {...register("subcategory", { required: false })} />
                         <button className="save"
-                            disabled={useUpdateItem.isPending}>
+                            disabled={updateItem.isPending}>
                             Save
                         </button>
                     </form>

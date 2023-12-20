@@ -8,12 +8,12 @@ import { FiTrash } from "react-icons/fi";
 import UpdateItemModal from "./Modals/UpdateItemModal";
 import UpdateSubcategoryOrderModal from "./Modals/UpdateSubcategoryOrderModal";
 import { useBoundStore } from "@/app/store";
-import ItemsService from "@/app/services/client/ItemsService";
+import { useDeleteItem, useGetItems } from "@/app/services/client/ItemsService";
 
 
 export default function Manage() {
-    const { data: items } = ItemsService.useGetItems();
-    const useDeleteItem = ItemsService.useDeleteItem();
+    const { data: items } = useGetItems();
+    const deleteItem = useDeleteItem();
 
     const selectedCountry = useBoundStore(state => state.selectedCountry);
     const selectedCategory = useBoundStore(state => state.selectedCategory);
@@ -86,9 +86,9 @@ export default function Manage() {
         })
     }
 
-    const deleteItem = (id: string) => {
+    const deleteItemOnClick = (id: string) => {
         if (confirm(`Are you sure you want to delete ${id}?`)) {
-            useDeleteItem.mutate(id);
+            deleteItem.mutate(id);
         }
     }
 
@@ -143,7 +143,7 @@ export default function Manage() {
                                 }}
                             >
                                 <img src={"/images/" + item.source} alt={item.filename} draggable={false} />
-                                <button className="button-delete" onClick={() => deleteItem(item._id)}><FiTrash /></button>
+                                <button className="button-delete" onClick={() => deleteItemOnClick(item._id)}><FiTrash /></button>
                             </div>
                         </SortableItem>
                     ))}

@@ -3,14 +3,14 @@
 import { useEffect, useState } from "react";
 import Category from "./Category";
 import SubNavbar from "../Nav/SubNavbar";
-import ItemsService from "@/app/services/client/ItemsService";
+import { useGetItemsByCountry } from "@/app/services/client/ItemsService";
 
 interface CategoryHolderProps {
     country: string,
 
 }
 const CategoryHolder = ({ country }: CategoryHolderProps) => {
-    const { data: items } = ItemsService.useGetItemsByCountry(country);
+    const { data: items } = useGetItemsByCountry(country);
 
     const categories = [...new Set(items?.map(item => item.category))];
 

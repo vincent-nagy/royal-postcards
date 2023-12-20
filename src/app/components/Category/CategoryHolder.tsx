@@ -3,22 +3,16 @@
 import { useEffect, useState } from "react";
 import Category from "./Category";
 import SubNavbar from "../Nav/SubNavbar";
-import { useFetchItemsQuery } from "@/app/services/client/ItemsService";
+import ItemsService from "@/app/services/client/ItemsService";
 
 interface CategoryHolderProps {
     country: string,
 
 }
 const CategoryHolder = ({ country }: CategoryHolderProps) => {
-    const { items } = useFetchItemsQuery(undefined, {
-        selectFromResult: ({ data }) => ({
-            items: data?.filter(item => item.country === country)
-        }),
-    });
+    const { data: items } = ItemsService.useGetItemsByCountry(country);
 
     const categories = [...new Set(items?.map(item => item.category))];
-    console.log("ITEMS::", items);
-    console.log("CATEGORIES::", categories);
 
     const [currentCategory, setCurrentCategory] = useState(categories[0]);
 

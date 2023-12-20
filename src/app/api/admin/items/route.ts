@@ -4,7 +4,7 @@ import os from "os";
 import clientPromise from "@/mongodb";
 import sizeOf from "image-size";
 import FsService from "@/app/services/FsService";
-import { WithId } from "mongodb";
+import { Db, WithId } from "mongodb";
 
 
 export async function GET(request: NextRequest) {
@@ -23,6 +23,8 @@ export async function POST(request: NextRequest) {
     if (!session) {
         return NextResponse.json(null, { status: 401 })
     }
+    const client = await clientPromise;
+    const db = client.db("Royal");
 
     const formData = await request.formData();
 
@@ -42,6 +44,7 @@ export async function POST(request: NextRequest) {
     await FsService.writeFiles(files, folder, errors);
 
 
+    const subcategoryOrder = (await db.collection("Postcards").findOne({ country, category, subcategory }))?.subcategoryOrder;
 
     const items: Item[] = files.filter(file => !errors.find(error => {
         return error.includes(file.name)
@@ -55,12 +58,12 @@ export async function POST(request: NextRequest) {
             country: country,
             category: category,
             subcategory: subcategory,
+            subcategoryOrder: subcategoryOrder,
             layout: size.height && size.width ? (size.height < size.width ? "horizontal" : "vertical") : "horizontal",
         } as Item)
     });
 
-    const client = await clientPromise;
-    const db = client.db("Royal");
+
 
     let savedItems = [];
     await Promise.all(items.map(async (item) => {

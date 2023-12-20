@@ -61,8 +61,13 @@ export async function PUT(request: NextRequest, { params }: { params: { itemId: 
     const result = await db.collection("Postcards").updateOne({ _id: new ObjectId(params.itemId) }, { $set: withoutId });
     console.log("Result : ", result);
 
-    if (result.acknowledged && result.modifiedCount > 0) {
-        FsService.moveFile(json.source, source);
+    if (result.modifiedCount > 0) {
+        if (json.source !== source) {
+            FsService.moveFile(json.source, source);
+        }
+        return NextResponse.json(null, { status: 200 });
+    }
+    if (result.acknowledged) {
         return NextResponse.json(null, { status: 200 });
     }
 

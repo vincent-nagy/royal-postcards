@@ -6,31 +6,40 @@ import { arrayMoveImmutable } from "array-move";
 import ItemsApiService from "@/app/services/ItemsApiService";
 import { FiTrash } from "react-icons/fi";
 import UpdateItemModal from "./Modals/UpdateItemModal";
-import { useDeleteItemMutation, useFetchItemsQuery } from "@/app/services/client/ItemsService";
+import UpdateSubcategoryOrderModal from "./Modals/UpdateSubcategoryOrderModal";
+import { useBoundStore } from "@/app/store";
+import ItemsService from "@/app/services/client/ItemsService";
 
 
 export default function Manage() {
-    const { data: items } = useFetchItemsQuery();
-    const [deleteItemMutation] = useDeleteItemMutation();
+    const { data: items } = ItemsService.useGetItems();
+    const useDeleteItem = ItemsService.useDeleteItem();
 
-    // const countries = [...new Set(items?.map(item => item.country))]
+    const selectedCountry = useBoundStore(state => state.selectedCountry);
+    const selectedCategory = useBoundStore(state => state.selectedCategory);
+    const selectedItem = useBoundStore(state => state.selectedItem);
+    const setSelectedCountry = useBoundStore(state => state.setSelectedCountry);
+    const setSelectedCategory = useBoundStore(state => state.setSelectedCategory);
+    const setSelectedItem = useBoundStore(state => state.setSelectedItem);
+
+
     const [countries, setCountries] = useState<string[]>([]);
     const [categories, setCategories] = useState<string[]>([]);
-    const [selectedCountry, setSelectedCountry] = useState<string>("");
-    const [selectedCategory, setSelectedCategory] = useState<string>("");
     const [filteredItems, setFilteredItems] = useState<Item[]>([]);
-    const [modalItem, setModalItem] = useState<Item>();
+    const [isUpdateItemModalOpen, setIsUpdateItemModalOpen] = useState(false);
+    const [isUpdateSubcategoryOrderModalOpen, setIsUpdateSubcategoryOrderModalOpen] = useState(false);
 
     useEffect(() => {
         if (items && items.length > 0) {
             const countries = [...new Set(items.map(item => item.country))];
             setCountries(countries);
-            if (selectedCountry === "" || selectedCountry === undefined) {
+            if (selectedCountry === "") {
                 setSelectedCountry(countries[0]);
             }
-            if (selectedCategory === "" || selectedCategory === undefined) {
+            if (selectedCategory === "") {
                 setSelectedCategory(categories[0]);
             }
+            updateFilteredItems();
         }
     }, [items]);
 
@@ -43,13 +52,17 @@ export default function Manage() {
     }, [categories])
 
     useEffect(() => {
+        updateFilteredItems();
+    }, [selectedCategory])
+
+    const updateFilteredItems = () => {
         setFilteredItems(items?.filter(item => item.country === selectedCountry && item.category === selectedCategory).sort((a, b) => {
             if (a.order === undefined || b.order === undefined) {
                 return 0;
             }
             return a.order > b.order ? 1 : -1;
         }) ?? []);
-    }, [selectedCategory])
+    }
 
     const onSortEnd = (oldIndex: number, newIndex: number) => {
         setFilteredItems((array) => arrayMoveImmutable(array, oldIndex, newIndex));
@@ -75,32 +88,16 @@ export default function Manage() {
 
     const deleteItem = (id: string) => {
         if (confirm(`Are you sure you want to delete ${id}?`)) {
-            // ItemsApiService.deleteItem(id).then(deletedSuccessfully => {
-            //     if (!deletedSuccessfully) {
-            //         alert("Failed to delete item");
-            //     } else {
-            //         setFilteredItems(filteredItems.filter(item => item._id !== id));
-            //     }
-            // });
-            deleteItemMutation(id)
-                .unwrap()
-                .then(() => {
-                    setFilteredItems(filteredItems.filter(item => item._id !== id));
-                }).catch(() => {
-                    alert("Failed to delete item");
-                })
+            useDeleteItem.mutate(id);
         }
-    }
-
-    const openUpdateItemModal = (item: Item) => {
-        console.log("Setting modalItem", item);
-        setModalItem(item);
     }
 
     return (
         <div>
             <h1>Manage</h1>
-            <UpdateItemModal item={modalItem} closeModal={() => setModalItem(undefined)} />
+            <UpdateItemModal item={selectedItem} isOpen={isUpdateItemModalOpen} closeModal={() => setIsUpdateItemModalOpen(false)} />
+            {selectedCountry && <UpdateSubcategoryOrderModal isOpen={isUpdateSubcategoryOrderModalOpen}
+                closeModal={() => setIsUpdateSubcategoryOrderModalOpen(false)} />}
             <select
                 value={selectedCountry}
                 onChange={(e) => {
@@ -122,6 +119,7 @@ export default function Manage() {
                 ))}
             </select>
             <button onClick={() => updateSort(filteredItems)}>Save sorting</button>
+            <button onClick={() => setIsUpdateSubcategoryOrderModalOpen(true)}>Update subcategory order</button>
             <div className="items">
                 <SortableList
                     onSortEnd={onSortEnd}
@@ -140,7 +138,8 @@ export default function Manage() {
                                 style={{ width: item.layout === "horizontal" ? 10 * 2 + "%" : 10 + "%", position: "relative" }}
                                 itemID={item._id}
                                 onDoubleClick={() => {
-                                    openUpdateItemModal(item);
+                                    setSelectedItem(item);
+                                    setIsUpdateItemModalOpen(true);
                                 }}
                             >
                                 <img src={"/images/" + item.source} alt={item.filename} draggable={false} />

@@ -28,7 +28,8 @@
     "react-icons": "^4.11.0",
     "react-modal-image": "^2.6.0",
     "react-select": "^5.7.7",
-    "sortablejs": "^1.15.0",
+    "react-sortablejs": "^6.1.4",
+    "sortablejs": "^1.15.1",
     "yet-another-react-lightbox": "^3.14.0",
     "zustand": "^4.4.7"
   },

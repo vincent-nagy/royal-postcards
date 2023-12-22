@@ -166,6 +166,7 @@ export default function Manage() {
                 setList={setFilteredItems}
                 style={{
                   display: "flex",
+                  flexWrap: "wrap",
                   userSelect: "none",
                 }}
               >
@@ -215,7 +216,6 @@ export default function Manage() {
           }
           .sort-list {
             display: "flex";
-            flexwrap: "wrap";
             userselect: "none";
           }
           .sort-item-wrapper {

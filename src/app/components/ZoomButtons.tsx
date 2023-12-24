@@ -1,26 +1,22 @@
 "use client";
 
 import { FiZoomIn, FiZoomOut } from "react-icons/fi";
-import { useBaseWidthContext } from "../context/BaseWidth";
+import { useBoundStore } from "../store";
 
 export default function ZoomButtons() {
-  const { baseWidth, setBaseWidth } = useBaseWidthContext();
+  const baseWidth = useBoundStore((state) => state.baseWidth);
+  const increaseBaseWidth = useBoundStore((state) => state.increaseBaseWidth);
+  const decreaseBaseWidth = useBoundStore((state) => state.decreaseBaseWidth);
 
   return (
     <>
       <div id="zoom-in">
-        <button
-          className="bottom-button"
-          onClick={() => setBaseWidth(baseWidth >= 10 ? baseWidth + 10 : 10)}
-        >
+        <button className="bottom-button" onClick={increaseBaseWidth}>
           <FiZoomIn />
         </button>
       </div>
       <div id="zoom-out">
-        <button
-          className="bottom-button"
-          onClick={() => setBaseWidth(baseWidth > 10 ? baseWidth - 10 : 5)}
-        >
+        <button className="bottom-button" onClick={decreaseBaseWidth}>
           <FiZoomOut />
         </button>
       </div>
@@ -28,13 +24,13 @@ export default function ZoomButtons() {
         #zoom-in {
           position: fixed;
           bottom: 10px;
-          right: 30px;
+          right: 70px;
         }
 
         #zoom-out {
           position: fixed;
           bottom: 10px;
-          right: 10px;
+          right: 50px;
         }
 
         .bottom-button {

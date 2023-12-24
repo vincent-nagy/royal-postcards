@@ -1,13 +1,15 @@
 "use client";
 
 import ModalImage from "react-modal-image";
+import { useBoundStore } from "../store";
 
 type ItemImageProps = {
   item: Item;
-  baseWidth: number;
 };
 
-const ItemImage = ({ item, baseWidth }: ItemImageProps) => {
+const ItemImage = ({ item }: ItemImageProps) => {
+  const baseWidth = useBoundStore((state) => state.baseWidth);
+
   return (
     <>
       <div

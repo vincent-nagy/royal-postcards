@@ -1,6 +1,5 @@
 "use client";
 
-import useBaseWidthContext from "../../context/BaseWidth";
 import ItemImage from "../ItemImage";
 
 interface SubcategoryProps {
@@ -9,8 +8,6 @@ interface SubcategoryProps {
 }
 
 const Subcategory = ({ items, title }: SubcategoryProps) => {
-  const { baseWidth } = useBaseWidthContext();
-
   return (
     <>
       <div className="subcategory">
@@ -24,7 +21,7 @@ const Subcategory = ({ items, title }: SubcategoryProps) => {
               return a.order > b.order ? 1 : -1;
             })
             .map((item) => (
-              <ItemImage key={item._id} item={item} baseWidth={baseWidth} />
+              <ItemImage key={item._id} item={item} />
             ))}
         </div>
       </div>

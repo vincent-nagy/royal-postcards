@@ -9,11 +9,22 @@ const Navbar = async () => {
   const client = await clientPromise;
   const db = client.db("Royal");
 
-  const countries = (
-    await db.collection<Item>("Postcards").distinct("country")
-  ).map((country: string) => {
-    return country as string;
-  });
+  let countries;
+  if (process.env.NODE_ENV === "development") {
+    countries = (
+      await db.collection<Item>("Postcards").distinct("country")
+    ).map((country: string) => {
+      return country as string;
+    });
+  } else {
+    countries = (
+      await db.collection<Item>("Postcards").distinct("country", {
+        country: { $ne: "Test" },
+      })
+    ).map((country: string) => {
+      return country as string;
+    });
+  }
 
   return (
     <>

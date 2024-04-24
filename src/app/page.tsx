@@ -9,7 +9,9 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
-      <h1>Home</h1>
+      <div>
+        <span className="emailContainer">If you are interested in Royal postcards you may contact me <a href="mailto:vanzwienen.karin@gmail.com">vanzwienen.karin@gmail.com</a></span>
+      </div>
     </>
   );
 }
